@@ -33,6 +33,13 @@
 
 #include "common.h"
 
+static void flicker_led_handler(struct k_timer *timer);
+K_TIMER_DEFINE(led_timer, &flicker_led_handler, NULL);
+
+static int led_flicker = 0;
+static struct device *led_dev;
+
+
 /* The startup time needs to be longish if DHCP is enabled as setting
  * DHCP up takes some time.
  */
@@ -67,6 +74,8 @@ struct net_pkt *build_reply_pkt(const char *name,
 	int header_len = 0, recv_len, reply_len;
 
 	NET_INFO("%s received %d bytes", name, net_pkt_appdatalen(pkt));
+    
+    led_flicker = 1;
 
 	if (net_pkt_appdatalen(pkt) == 0) {
 		return NULL;
@@ -172,9 +181,125 @@ static inline int init_app(void)
 	return 0;
 }
 
+#include <adc.h>
+#include <board.h>
+#include <device.h>
+#include <gpio.h>
+
+#define BUFFER_SIZE 5
+
+#if defined(CONFIG_BOARD_FRDM_K64F)
+#define ADC_DEV_NAME    CONFIG_ADC_1_NAME
+#define ADC_CHANNEL     14
+#elif defined(CONFIG_BOARD_FRDM_KL25Z)
+#define ADC_DEV_NAME    CONFIG_ADC_0_NAME
+#define ADC_CHANNEL     12
+#elif defined(CONFIG_BOARD_FRDM_KW41Z)
+#define ADC_DEV_NAME    CONFIG_ADC_0_NAME
+#define ADC_CHANNEL     3
+#elif defined(CONFIG_BOARD_HEXIWEAR_K64)
+#define ADC_DEV_NAME    CONFIG_ADC_0_NAME
+#define ADC_CHANNEL     16
+#elif defined(CONFIG_BOARD_HEXIWEAR_KW40Z)
+#define ADC_DEV_NAME    CONFIG_ADC_0_NAME
+#define ADC_CHANNEL     1
+#else
+#define ADC_DEV_NAME    CONFIG_ADC_0_NAME
+#define ADC_CHANNEL     10
+#endif
+static u16_t seq_buffer[BUFFER_SIZE];
+
+/* Change this if you have an LED connected to a custom port */
+#define PORT    LED0_GPIO_PORT
+/* Change this if you have an LED connected to a custom pin */
+#define LED     LED0_GPIO_PIN
+
+/* 1000 msec = 1 sec */
+#define SLEEP_TIME      1000
+
+
+static struct adc_seq_entry entry = {
+	.sampling_delay = 30,
+	.channel_id = ADC_CHANNEL,
+	.buffer = (void *)seq_buffer,
+	.buffer_length = BUFFER_SIZE * sizeof(seq_buffer[0])
+};
+
+static struct adc_seq_table table = {
+	.entries = &entry,
+	.num_entries = 1,
+};
+
+
+
+static void flicker_led_handler(struct k_timer *timer)
+{
+    if (led_flicker)
+    {
+        gpio_pin_write(led_dev, LED, 0);
+        led_flicker = 0;
+    }
+    else
+    {
+        gpio_pin_write(led_dev, LED, 1);
+    }
+}
+
+
+void djlzork(void)
+{
+#if 1    
+    int i;
+	int ret;
+	struct device *adc_dev = device_get_binding(ADC_DEV_NAME);
+
+	led_dev = device_get_binding(PORT);
+	/* Set LED pin as output */
+	gpio_pin_configure(led_dev, LED, GPIO_DIR_OUT);
+    gpio_pin_write(led_dev, LED, 1);
+    k_sleep(SLEEP_TIME);
+    gpio_pin_write(led_dev, LED, 0);
+    k_sleep(SLEEP_TIME);
+    gpio_pin_write(led_dev, LED, 1);
+    k_sleep(SLEEP_TIME);
+    gpio_pin_write(led_dev, LED, 0);
+
+
+	if (!adc_dev) {
+		SYS_LOG_INF("Cannot get ADC device\n");
+		return;
+	}
+
+	/* 1. Verify adc_enable() */
+	adc_enable(adc_dev);
+
+	k_sleep(500);
+
+	/* 2. Verify adc_read() */
+	ret = adc_read(adc_dev, &table);
+	if (ret != 0) {
+		SYS_LOG_INF("Failed to fetch sample data from ADC controller\n");
+		return;
+	}
+
+	SYS_LOG_INF("Channel %d ADC Sample: ", ADC_CHANNEL);
+	for (i = 0; i < BUFFER_SIZE; i++) {
+		SYS_LOG_INF("%d ", seq_buffer[i]);
+	}
+	SYS_LOG_INF("\n");
+
+	/* 3. Verify adc_disable() */
+	adc_disable(adc_dev);
+    
+    //k_timer_start(&led_timer,10,10);
+#endif
+}
+
 void main(void)
 {
 	init_app();
+    
+    djlzork();
 
 	if (IS_ENABLED(CONFIG_NET_TCP)) {
 		start_tcp();

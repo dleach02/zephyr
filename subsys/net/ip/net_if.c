@@ -116,6 +116,7 @@ static bool net_if_tx(struct net_if *iface)
 	}
 
 	if (status < 0) {
+		NET_WARN("status: %d", status);
 		net_pkt_unref(pkt);
 	} else {
 		net_stats_update_bytes_sent(pkt_len);

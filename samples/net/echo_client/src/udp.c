@@ -49,6 +49,8 @@ static struct net_buf_pool *data_udp_pool(void)
 #define tx_udp_slab NULL
 #define data_udp_pool NULL
 #endif /* CONFIG_NET_CONTEXT_NET_PKT_POOL */
+#define DJLZORK_SIZE_START 112
+static int djlzorksize = DJLZORK_SIZE_START;
 
 static void send_udp_data(struct net_app_ctx *ctx, struct data *data)
 {
@@ -56,7 +58,11 @@ static void send_udp_data(struct net_app_ctx *ctx, struct data *data)
 	size_t len;
 	int ret;
 
+	data->expecting_udp = djlzorksize;
 	data->expecting_udp = sys_rand32_get() % ipsum_len;
+    //if (++djlzorksize > 130) djlzorksize = DJLZORK_SIZE_START;
+    
+    SYS_LOG_DBG("expecting_udp: %d", data->expecting_udp);
 
 	pkt = prepare_send_pkt(ctx, data->proto, data->expecting_udp);
 	if (!pkt) {

@@ -34,7 +34,7 @@
 		zephyr,bt-uart = &uart4;
 #endif
 #ifdef CONFIG_IEEE802154_FSCI
-		zephry,uart-pipe = &uart4;
+		zephyr,uart-pipe = &uart4;
 #endif
 	};
 
