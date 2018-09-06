@@ -34,6 +34,12 @@ add_subdirectory_ifdef(
   middleware/wireless/framework_5.3.3
   )
 
+add_subdirectory_ifdef(
+  CONFIG_BT_LL_KW41Z
+  middleware/wireless/framework_5.3.3
+  )
+
+
 enable_language(C ASM)
 
 zephyr_sources_ifdef(CONFIG_SOC_LPC54114_M4 devices/${MCUX_DEVICE}/gcc/startup_LPC54114_cm4.S)

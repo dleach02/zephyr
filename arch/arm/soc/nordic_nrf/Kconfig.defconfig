@@ -33,4 +33,10 @@ config SOC_FLASH_NRF
 
 endif # FLASH
 
+if BT_CTLR
+choice BT_LL_SW_TYPE
+	default BT_LL_SW
+endchoice
+endif # BT_CTLR
+
 endif # SOC_FAMILY_NRF

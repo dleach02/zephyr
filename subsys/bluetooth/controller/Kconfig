@@ -14,9 +14,9 @@ config BT_CTLR
 
 if BT_CTLR
 
-choice
+choice BT_LL_SW_TYPE
 	prompt "Bluetooth Link Layer Selection"
-	default BT_LL_SW
+#	default BT_LL_SW
 	help
 	  Select the Bluetooth Link Layer to compile.
 
@@ -28,6 +28,10 @@ config BT_LL_SW
 	select ENTROPY_NRF5_BIAS_CORRECTION if SOC_FAMILY_NRF
 	help
 	  Use Zephyr software BLE Link Layer implementation.
+
+config BT_LL_KW41Z
+	bool "KW41Z Link Layer Library"
+	select NEWLIB_LIBC
 
 endchoice
 
@@ -575,5 +579,167 @@ config BT_CTLR_DEBUG_PINS
 	  the code.
 
 endif # BT_LL_SW
+
+if BT_LL_KW41Z
+
+# KW41Z Link Layer Controller settings
+
+config KW41_NUM_TIMERS
+	int
+	default 1
+	help
+	  Select the number of timer service timers.
+
+config KW41_CTRL_PRIO
+	int
+	default 1
+	help
+	  Select the priority level the controller task shall run at.
+	  Should be set higher than host layer protocol stacks.
+
+config KW41_CTRL_STACK_SIZE
+	# Hidden option for Controller's Co-Operative high priority thread
+	# stack size.
+	int
+	default 1200
+
+config KW41_COEX_RF_DENY_ACTIVE_STATE
+	# Need to consider using a config for gMWS_UseCoexistence_d
+	# but for now this is is the pin polarity.
+	int
+	default 1
+	help
+	  Coexistence RF Deny pin polarity:
+	    1 - for active on logic one;
+	    0 - active on logic zero
+
+config KW41_ADVERTISING_DEFAULT_TX_POWER
+	int
+	default 20
+	help
+	  Default Tx Power on the advertising channel.
+	  For MKW41Z BLE controller there are 32 possible power
+	  levels 0 <= N <= 31 for which the output power is distributed
+	  evenly between minimum and maximum power levels.
+	  For further details see the silicon datasheet.
+
+config KW41_CONNECTION_DEFAULT_TX_POWER
+	int
+	default 20
+	help
+	  Default Tx Power on the connection channel.
+	  For MKW41Z BLE controller there are 32 possible power
+	  levels 0 <= N <= 31 for which the output power is distributed
+	  evenly between minimum and maximum power levels.
+	  For further details see the silicon datasheet.
+
+config KW41_MCU_SLEEP_DURING_BLE_EVENTS
+	bool
+	default y
+	help
+	   Enable/Disable MCU Sleep During BLE Events
+
+config KW41_ADVERTISING_PACKET_INTERVAL
+	int
+	default 8
+	help
+	  Time between the beginning of two consecutive advertising PDU's
+	  Time = ADVERTISING_PACKET_INTERVAL * 0.625msec
+	  Time range <= 10msec
+
+config KW41_SCAN_CHANNEL_MAP
+	hex
+	default 0x07
+	help
+	  Advertising channels that are enabled for scanning operation.
+	  Range 0x01 - 0x07
+	  0x01 - Enables channel 37 for use.
+	  0x02 - Enables channel 38 for use.
+	  0x04 - Enables channel 39 for use.
+
+config KW41_INITIATOR_CHANNEL_MAP
+	hex
+	default 0x07
+	help
+	  Advertising channels that are enabled for initiator scanning operation.
+	  Range 0x01 - 0x07
+	  0x01 - Enables channel 37 for use.
+	  0x02 - Enables channel 38 for use.
+	  0x04 - Enables channel 39 for use.
+
+config KW41_OFFSET_TO_FIRST_INSTANT
+	hex
+	default 0xFFFF
+	help
+	  Offset to the first instant register. Units in 625uS time slots.
+	  
+	  Ex. If current clock value is 0x0004 and offset is 0x0008, then
+	  the first event will begin when clock value becomes 0x000C.
+	  
+	  A value of 0xFFFF will be ignored and default value (0x0006)
+	  will be set.
+
+config KW41_XTAL_TRIM
+	hex
+	default 0xFF
+	help
+	  Measured trim value for tuning XTAL.
+
+config KW41_POOL_32_CNT
+	int
+	default 6
+	help
+	  Count of 32 byte buffer blocks available to the KW41 BLE Link Layer
+	  controller.
+
+	  If an allocation error is indicated then increase this number.
+
+config KW41_POOL_64_CNT
+	int
+	default 64
+	help
+	  Count of 64 byte buffer blocks available to the KW41 BLE Link Layer
+	  controller.
+
+	  If an allocation error is indicated then increase this number.
+
+config KW41_POOL_128_CNT
+	int
+	default 4
+	help
+	  Count of 128 byte buffer blocks available to the KW41 BLE Link Layer
+	  controller.
+
+	  If an allocation error is indicated then increase this number.
+
+config KW41_POOL_256_CNT
+	int
+	default 2
+	help
+	  Count of 256 byte buffer blocks available to the KW41 BLE Link Layer
+	  controller.
+
+	  If an allocation error is indicated then increase this number.
+
+config KW41_POOL_512_CNT
+	int
+	default 0
+	help
+	  Count of 512 byte buffer blocks available to the KW41 BLE Link Layer
+	  controller.
+
+	  If an allocation error is indicated then increase this number.
+
+config KW41_POOL_1024_CNT
+	int
+	default 0
+	help
+	  Count of 1024 byte buffer blocks available to the KW41 BLE Link Layer
+	  controller.
+
+	  If an allocation error is indicated then increase this number.
+
+
+endif # BT_LL_KW41Z
 
 endif # BT_CTLR
