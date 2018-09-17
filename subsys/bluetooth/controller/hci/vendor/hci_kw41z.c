@@ -603,9 +603,12 @@ static int kw41z_send(struct net_buf *buf)
 		_hexdump(buf->data, buf->len);
 		err = Hci_SendPacketToController(type, buf->data, buf->len);
 	}
-	if (!err) {
-		SYS_LOG_ERR("Hci_SendPacketToController error: 0x%x", err);
+	if (err == gCtrlSuccess_c) {
 		net_buf_unref(buf);
+	}
+	else
+	{
+		SYS_LOG_ERR("Hci_SendPacketToController error: 0x%x", err);
 	}
 
 	return err;
