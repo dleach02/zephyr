@@ -1,0 +1,39 @@
+VEGA SDK
+########
+
+Origin:
+   OpenISA VEGA SDK
+   https://github.com/open-isa-vega/vega_sdk_riscv/
+
+Status:
+   This includes portions of the initial release of the VEGA SDK.
+
+Purpose:
+   Provides device header files and bare metal peripheral drivers for
+   the RV32M1 SoC. Zephyr shim drivers are built on top of these imported
+   drivers to adapt the VEGA SDK APIs to Zephyr APIs.
+
+Description:
+   This package is an extract from the upstream VEGA SDK that contains
+   only the files needed for Zephyr.
+
+Dependencies:
+   None
+
+URL:
+   https://github.com/open-isa-vega/vega_sdk_riscv/
+
+commit:
+   7aa3c94
+
+Maintained-by:
+   External
+
+License:
+   BSD-3-Clause
+
+License Link:
+   https://spdx.org/licenses/BSD-3-Clause.html
+
+Patch List:
+   No changes were made to any imported source files.
