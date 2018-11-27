@@ -9,6 +9,8 @@ target_sources_ifdef(CONFIG_BOARD_BBC_MICROBIT app PRIVATE src/microbit.c)
 zephyr_include_directories_ifdef(CONFIG_BOARD_BBC_MICROBIT
 				 $ENV{ZEPHYR_BASE}/boards/arm/bbc_microbit)
 
+target_sources_ifdef(CONFIG_BOARD_FRDM_KW41Z app PRIVATE src/frdm_kw41z.c)
+
 if(NODE_ADDR)
   zephyr_compile_definitions(NODE_ADDR=${NODE_ADDR})
 endif()

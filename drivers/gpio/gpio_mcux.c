@@ -72,12 +72,12 @@ static int gpio_mcux_configure(struct device *dev,
 	/* Now do the PORT module. Figure out the pullup/pulldown
 	 * configuration, but don't write it to the PCR register yet.
 	 */
-	mask |= PORT_PCR_PE_MASK | PORT_PCR_PS_MASK;
+	mask |= PORT_PCR_PE_MASK | PORT_PCR_PS_MASK | PORT_PCR_SRE_MASK;
 
 	if ((flags & GPIO_PUD_MASK) == GPIO_PUD_PULL_UP) {
 		/* Enable the pull and select the pullup resistor. */
 		pcr |= PORT_PCR_PE_MASK | PORT_PCR_PS_MASK;
-
+		pcr |= PORT_PCR_SRE_MASK;
 	} else if ((flags & GPIO_PUD_MASK) == GPIO_PUD_PULL_DOWN) {
 		/* Enable the pull and select the pulldown resistor (deselect
 		 * the pullup resistor.
