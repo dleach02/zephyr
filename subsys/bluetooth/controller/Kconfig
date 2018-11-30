@@ -28,10 +28,23 @@ config BT_LL_SW
 	help
 	  Use Zephyr software BLE Link Layer implementation.
 
+<<<<<<< 5560eb8ee19a641614ef883ac01cd6902a43096d
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Builds BLE for the ri5cy... except ri5cy don't support BLE in HW :-(
 config BT_LL_KW41Z
 	bool "KW41Z Link Layer Library"
 	select NEWLIB_LIBC
 
+<<<<<<< 5560eb8ee19a641614ef883ac01cd6902a43096d
+=======
+config BT_LL_RV32M1
+	bool "RV32M1 Link Layer Library"
+	select NEWLIB_LIBC
+
+>>>>>>> Stashed changes
+>>>>>>> Builds BLE for the ri5cy... except ri5cy don't support BLE in HW :-(
 endchoice
 
 comment "BLE Controller configuration"
@@ -596,5 +609,6 @@ config BT_CTLR_DEBUG_PINS
 endif # BT_LL_SW
 
 source "subsys/bluetooth/controller/hci/kw41z/Kconfig"
+source "subsys/bluetooth/controller/hci/rv32m1/Kconfig"
 
 endif # BT_CTLR

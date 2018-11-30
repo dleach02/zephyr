@@ -4,3 +4,4 @@
 #
 
 add_subdirectory_ifdef(CONFIG_BT_LL_KW41Z nxp_kinetis)
+add_subdirectory_ifdef(CONFIG_BT_LL_RV32M1 rv32m1)

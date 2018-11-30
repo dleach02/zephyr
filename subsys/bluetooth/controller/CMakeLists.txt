@@ -67,4 +67,11 @@ if (CONFIG_BT_LL_KW41Z)
     )
 endif()
 
+if (CONFIG_BT_LL_RV32M1)
+  zephyr_library_sources(
+     hci/rv32m1/hci_rv32m1.c
+     hci/rv32m1/nxp_framework.c
+    )
+endif()
+
 zephyr_library_link_libraries(subsys__bluetooth)

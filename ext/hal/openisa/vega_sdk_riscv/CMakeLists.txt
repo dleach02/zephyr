@@ -13,4 +13,10 @@ else()
   zephyr_compile_definitions(CPU_RV32M1_zero_riscy)
 endif()
 
+if(CONFIG_BT_LL_RV32M1)
+  add_subdirectory(
+    middleware/wireless/framework
+    )
+endif()
+
 add_subdirectory(devices/RV32M1/drivers)

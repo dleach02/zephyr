@@ -24,6 +24,7 @@
 		uart-1 = &uart1;
 		uart-2 = &uart2;
 		uart-3 = &uart3;
+		trng = &trng;
 	};
 
 	cpus {
@@ -239,5 +240,15 @@
 			label = "UART_3";
 			status = "disabled";
 		};
+
+		trng: random@41029000 {
+			compatible = "openisa,rv32m1-trng";
+			reg = <0x41029000 0x1000>;
+			interrupt-parent = <&intmux>;
+			interrupts = <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 20)>;
+			label = "TRNG";
+			status = "ok";
+		};
+
 	};
 };

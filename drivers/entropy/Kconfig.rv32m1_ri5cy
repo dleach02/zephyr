@@ -1,0 +1,15 @@
+# Kconfig.rv32m1_riscy - RV32M1 RI5CY entropy generator driver configuration
+#
+# Copyright (c) 2016 ARM Ltd.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+
+menuconfig ENTROPY_RV32M1_TRNG
+	bool "RV32M1 TRNG driver"
+	depends on ENTROPY_GENERATOR && HAS_RV32M1_TRNG
+	select ENTROPY_HAS_DRIVER
+	select HAS_DTS_ENTROPY
+	help
+	  This option enables the true random number generator (TRNG)
+	  driver based on the RV32M1 TRNG driver.

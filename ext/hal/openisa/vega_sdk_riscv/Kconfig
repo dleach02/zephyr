@@ -10,3 +10,10 @@ config HAS_RV32M1_LPUART
 	bool
 	help
 	  Set if the low power uart (LPUART) module is present in the SoC.
+
+config HAS_RV32M1_TRNG
+	bool
+	help
+	  Set if the true random number generator (TRNG) module is present in
+	  the SoC.
+

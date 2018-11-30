@@ -9,6 +9,7 @@
 
 #ifndef _ASMLANGUAGE
 
+#include <zephyr/types.h>
 #include "fsl_device_registers.h"
 
 /*
@@ -102,5 +103,9 @@ void soc_interrupt_init(void);
 #elif defined(CONFIG_SOC_OPENISA_RV32M1_ZERO_RISCY)
 #include "soc_zero_riscy.h"
 #endif
+
+/* Newlib hooks (and potentially other things) use these defines. */
+#define RISCV_RAM_SIZE CONFIG_RISCV32_RV32M1_RAM_SIZE
+#define RISCV_RAM_BASE CONFIG_RISCV32_RV32M1_RAM_BASE_ADDR
 
 #endif /* SOC_RISCV32_OPENISA_RV32M1_SOC_H_ */
