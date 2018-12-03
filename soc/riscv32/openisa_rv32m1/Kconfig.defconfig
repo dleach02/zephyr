@@ -184,4 +184,11 @@ config UART_RV32M1_LPUART
 
 endif # UART
 
+if FLASH
+
+config SOC_FLASH_RV32M1
+	default y
+
+endif # FLASH
+
 endif # SOC_OPENISA_RV32M1_RISCV32
