@@ -17,9 +17,7 @@
 #include <kernel_structs.h>
 #include <kernel_offsets.h>
 
-#ifdef CONFIG_RISCV_SOC_CONTEXT_SAVE
 #include <soc_context.h>
-#endif
 
 /* thread_arch_t member offsets */
 GEN_OFFSET_SYM(_thread_arch_t, swap_return_value);
@@ -64,8 +62,8 @@ GEN_OFFSET_SYM(NANO_ESF, mstatus);
 
 #if defined(CONFIG_RISCV_SOC_CONTEXT_SAVE)
 GEN_OFFSET_SYM(NANO_ESF, soc_context);
-GEN_SOC_OFFSET_SYMS();
 #endif
+GEN_SOC_OFFSET_SYMS();
 
 /*
  * RISC-V requires the stack to be 16-bytes aligned, hence SP needs to grow or
