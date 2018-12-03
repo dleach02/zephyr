@@ -1,0 +1,22 @@
+---
+title: OpenISA RV32M1 Flash Memory Module (FTFE)
+version: 0.1
+
+description: >
+    This binding gives for the OpenISA RV32M1 Flash Memory Module E (FTFE)
+
+inherits:
+    !include flash-controller.yaml
+
+properties:
+  compatible:
+    constraint: "openisa,rv32m1-ftfe"
+
+  clocks:
+      type: array
+      category: optional
+      description: Clock gate information
+      generation: define
+
+
+...

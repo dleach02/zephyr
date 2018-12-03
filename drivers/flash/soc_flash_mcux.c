@@ -144,6 +144,10 @@ static int flash_mcux_init(struct device *dev)
 	struct flash_priv *priv = dev->driver_data;
 	status_t rc;
 
+#if defined(CONFIG_SOC_FLASH_RV32M1)
+	CLOCK_EnableClock(kCLOCK_Mscm);
+#endif
+
 	k_sem_init(&priv->write_lock, 0, 1);
 
 	rc = FLASH_Init(&priv->config);

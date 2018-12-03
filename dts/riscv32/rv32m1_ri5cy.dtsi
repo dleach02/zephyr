@@ -24,6 +24,7 @@
 		uart-1 = &uart1;
 		uart-2 = &uart2;
 		uart-3 = &uart3;
+		flash-ctrl-0 = &fctrl0;
 	};
 
 	cpus {
@@ -239,5 +240,28 @@
 			label = "UART_3";
 			status = "disabled";
 		};
+
+
+		fctrl0: flash-controller@40023000 {
+			compatible = "openisa,rv32m1-ftfe";
+			label = "FLASH_CTRL";
+			reg = <0x40023000 0x2c>;
+			interrupt-parent = <&intmux>;
+			interrupts = <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 1)>, <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 2)>;
+			interrupt-names = "command-complete", "read-collision";
+			clocks = <&pcc0 0x4>;
+
+			#address-cells = <1>;
+			#size-cells = <1>;
+
+			flash0: flash@0 {
+				compatible = "soc-nv-flash";
+				label = "RV32M1_FLASH";
+				reg = <0 0x100000>;
+				erase-block-size = <4096>;
+				write-block-size = <8>;
+			};
+		};
+
 	};
 };
