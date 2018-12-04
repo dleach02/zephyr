@@ -65,11 +65,11 @@
 			#clock-cells = <1>;
 		};
 
-		event: interrupt-controller@E0041000 {
+		event: interrupt-controller@4101F000 {
 			compatible = "openisa,rv32m1-event-unit";
 			#interrupt-cells = <1>;
 			interrupt-controller;
-			reg = <0xE0041000 0x88>;
+			reg = <0x4101F000 0x88>;
 		};
 
 		intmux0: interrupt-controller@4004f000 {
@@ -230,7 +230,7 @@
 			flash0: flash@0 {
 				compatible = "soc-nv-flash";
 				label = "RV32M1_FLASH";
-				reg = <0x01000000 0x01040000>;
+				reg = <0 0x100000>;
 				erase-block-size = <4096>;
 				write-block-size = <8>;
 			};
