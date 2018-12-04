@@ -8,7 +8,9 @@
 	aliases {
 		pcc-0 = &pcc0;
 		pcc-1 = &pcc1;
-		intmux = &intmux;
+		intmux0 = &intmux0;
+		intmux1 = &intmux1;
+		intmux = &intmux1;
 		system-lptmr = &lptmr2;
 		pinmux-a = &pinmux_a;
 		pinmux-b = &pinmux_b;
@@ -19,11 +21,10 @@
 		gpio-b = &gpiob;
 		gpio-c = &gpioc;
 		gpio-d = &gpiod;
-		gpio-e = &gpioe;
 		uart-0 = &uart0;
 		uart-1 = &uart1;
 		uart-2 = &uart2;
-		uart-3 = &uart3;
+		flash-ctrl-0 = &fctrl0;
 	};
 
 	cpus {
@@ -64,14 +65,14 @@
 			#clock-cells = <1>;
 		};
 
-		event: interrupt-controller@e0041000 {
+		event: interrupt-controller@E0041000 {
 			compatible = "openisa,rv32m1-event-unit";
 			#interrupt-cells = <1>;
 			interrupt-controller;
-			reg = <0xe0041000 0x88>;
+			reg = <0xE0041000 0x88>;
 		};
 
-		intmux: interrupt-controller@4004f000 {
+		intmux0: interrupt-controller@4004f000 {
 			compatible = "openisa,rv32m1-intmux";
 			#interrupt-cells = <1>;
 			interrupt-controller;
@@ -80,6 +81,17 @@
 			reg = <0x4004f000 0x20>;
 			clocks = <&pcc0 0x13c>;
 			label = "INTMUX0";
+		};
+
+		intmux1: interrupt-controller@41022000 {
+			compatible = "openisa,rv32m1-intmux";
+			#interrupt-cells = <1>;
+			interrupt-controller;
+			interrupt-parent = <&event>;
+			interrupts = <INTMUX_CH0_IRQ>, <INTMUX_CH1_IRQ>, <INTMUX_CH2_IRQ>, <INTMUX_CH3_IRQ>, <INTMUX_CH4_IRQ>, <INTMUX_CH5_IRQ>, <INTMUX_CH6_IRQ>, <INTMUX_CH7_IRQ>;
+			reg = <0x41022000 0x20>;
+			clocks = <&pcc1 0x88>;
+			label = "INTMUX1";
 		};
 
 		/*
@@ -94,22 +106,6 @@
 		 * Each enabled channel requires 256 bytes in _sw_isr_table,
 		 * so the savings for disabling channels can add up.
 		 */
-
-		lptmr0: timer@40032000 {
-			compatible = "openisa,rv32m1-lptmr";
-			reg = <0x40032000 0x10>;
-			interrupt-parent = <&intmux>;
-			interrupts = <INTMUX_LEVEL2_IRQ(INTMUX_CH0, 7)>;
-			label = "LPTMR_0";
-		};
-
-		lptmr1: timer@40033000 {
-			compatible = "openisa,rv32m1-lptmr";
-			reg = <0x40033000 0x10>;
-			interrupt-parent = <&intmux>;
-			interrupts = <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 8)>;
-			label = "LPTMR_1";
-		};
 
 		lptmr2: timer@4102b000 {
 			compatible = "openisa,rv32m1-lptmr";
@@ -152,8 +148,8 @@
 		gpioa: gpio@48020000 {
 			compatible = "openisa,rv32m1-gpio";
 			reg = <0x48020000 0x14>;
-			interrupt-parent = <&event>;
-			interrupts = <18>;
+			interrupt-parent = <&intmux1>;
+			interrupts = <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 25)>;
 			label = "GPIO_0";
 			gpio-controller;
 			#gpio-cells = <2>;
@@ -162,8 +158,8 @@
 		gpiob: gpio@48020040 {
 			compatible = "openisa,rv32m1-gpio";
 			reg = <0x48020040 0x14>;
-			interrupt-parent = <&intmux>;
-			interrupts = <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 15)>;
+			interrupt-parent = <&intmux1>;
+			interrupts = <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 26)>;
 			label = "GPIO_1";
 			gpio-controller;
 			#gpio-cells = <2>;
@@ -172,8 +168,8 @@
 		gpioc: gpio@48020080 {
 			compatible = "openisa,rv32m1-gpio";
 			reg = <0x48020080 0x14>;
-			interrupt-parent = <&intmux>;
-			interrupts = <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 16)>;
+			interrupt-parent = <&intmux1>;
+			interrupts = <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 27)>;
 			label = "GPIO_2";
 			gpio-controller;
 			#gpio-cells = <2>;
@@ -182,29 +178,18 @@
 		gpiod: gpio@480200c0 {
 			compatible = "openisa,rv32m1-gpio";
 			reg = <0x480200c0 0x14>;
-			interrupt-parent = <&intmux>;
-			interrupts = <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 17)>;
+			interrupt-parent = <&intmux1>;
+			interrupts = <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 28)>;
 			label = "GPIO_3";
 			gpio-controller;
 			#gpio-cells = <2>;
 		};
 
-		gpioe: gpio@4100f000 {
-			compatible = "openisa,rv32m1-gpio";
-			reg = <0x4100f000 0x14>;
-			interrupt-parent = <&intmux>;
-			interrupts = <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 27)>;
-			label = "GPIO_4";
-			gpio-controller;
-			#gpio-cells = <2>;
-			clocks = <&pcc1 0x3c>;
-		};
-
 		uart0: lpuart@40042000 {
 			compatible = "openisa,rv32m1-lpuart";
 			reg = <0x40042000 0x2c>;
-			interrupt-parent = <&event>;
-			interrupts = <17>;
+			interrupt-parent = <&intmux1>;
+			interrupts = <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 21)>;
 			clocks = <&pcc0 0x108>;
 			label = "UART_0";
 			status = "disabled";
@@ -213,8 +198,8 @@
 		uart1: lpuart@40043000 {
 			compatible = "openisa,rv32m1-lpuart";
 			reg = <0x40043000 0x2c>;
-			interrupt-parent = <&intmux>;
-			interrupts = <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 13)>;
+			interrupt-parent = <&intmux1>;
+			interrupts = <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 22)>;
 			clocks = <&pcc0 0x10c>;
 			label = "UART_1";
 			status = "disabled";
@@ -223,21 +208,32 @@
 		uart2: lpuart@40044000 {
 			compatible = "openisa,rv32m1-lpuart";
 			reg = <0x40044000 0x2c>;
-			interrupt-parent = <&intmux>;
-			interrupts = <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 14)>;
+			interrupt-parent = <&intmux1>;
+			interrupts = <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 23)>;
 			clocks = <&pcc0 0x110>;
 			label = "UART_2";
 			status = "disabled";
 		};
 
-		uart3: lpuart@41036000 {
-			compatible = "openisa,rv32m1-lpuart";
-			reg = <0x41036000 0x2c>;
-			interrupt-parent = <&intmux>;
-			interrupts = <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 26)>;
-			clocks = <&pcc0 0xd8>;
-			label = "UART_3";
-			status = "disabled";
+		fctrl0: flash-controller@40023000 {
+			compatible = "openisa,rv32m1-ftfe";
+			label = "FLASH_CTRL";
+			reg = <0x40023000 0x2c>;
+			interrupt-parent = <&intmux1>;
+			interrupts = <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 1)>, <INTMUX_LEVEL2_IRQ(INTMUX_CH1, 2)>;
+			interrupt-names = "command-complete", "read-collision";
+			clocks = <&pcc0 0x4>;
+
+			#address-cells = <1>;
+			#size-cells = <1>;
+
+			flash0: flash@0 {
+				compatible = "soc-nv-flash";
+				label = "RV32M1_FLASH";
+				reg = <0x01000000 0x01040000>;
+				erase-block-size = <4096>;
+				write-block-size = <8>;
+			};
 		};
 	};
 };

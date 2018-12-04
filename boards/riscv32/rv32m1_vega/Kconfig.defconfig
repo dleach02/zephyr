@@ -45,7 +45,7 @@ config GPIO_RV32M1_PORTD
 	def_bool y if RV32M1_INTMUX
 
 config GPIO_RV32M1_PORTE
-	def_bool y if RV32M1_INTMUX
+	def_bool n if (RV32M1_INTMUX && SOC_OPENISA_RV32M1_RI5CY)
 
 endif # GPIO_RV32M1
 
