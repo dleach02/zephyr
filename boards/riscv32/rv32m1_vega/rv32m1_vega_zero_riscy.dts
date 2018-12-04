@@ -1,6 +1,6 @@
 /dts-v1/;
 
-#include "rv32m1_ri5cy.dtsi"
+#include "rv32m1_zero_riscy.dtsi"
 
 / {
 	model = "OpenISA RV32M1 Vega Zero RISCY";
