@@ -1,0 +1,8 @@
+#
+# Copyright (c) 2019 NXP Semiconductor
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+config HAS_NXP_DRIVERS
+	bool

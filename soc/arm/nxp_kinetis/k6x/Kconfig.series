@@ -11,5 +11,6 @@ config SOC_SERIES_KINETIS_K6X
 	select SOC_FAMILY_KINETIS
 	select CPU_HAS_NXP_MPU
 	select CLOCK_CONTROL
+	select HAS_NXP_DRIVERS
 	help
 	  Enable support for Kinetis K6x MCU series
